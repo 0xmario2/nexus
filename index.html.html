@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusAsset AI | Institutional RWA Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rh: {
+                            green: '#00C805',
+                            dark: '#050505',
+                            gray: '#121212',
+                            lightgray: '#222222'
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #050505; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth;
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            transition: all 0.3s ease;
+        }
+        .glass:hover {
+            border-color: rgba(0, 200, 5, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 200, 5, 0.1);
+            transform: translateY(-2px);
+        }
+        .gradient-text { 
+            background: linear-gradient(90deg, #fff, #00C805); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+        }
+        .rh-green { color: #00C805; }
+        .rh-bg-green { background-color: #00C805; }
+        .terminal-cursor {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .stat-number {
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="flex justify-between items-center py-6 px-12 border-b border-zinc-900 sticky top-0 bg-rh-dark/90 backdrop-blur-md z-50 transition-all duration-300" id="mainNav">
+        <div class="text-2xl font-bold italic">NEXUS<span class="rh-green">ASSET.AI</span></div>
+        <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest text-zinc-400">
+            <a href="#overview" class="hover:text-rh-green transition-colors duration-300">Protocol</a>
+            <a href="#markets" class="hover:text-rh-green transition-colors duration-300">Markets</a>
+            <a href="#features" class="hover:text-rh-green transition-colors duration-300">Features</a>
+            <a href="#security" class="hover:text-rh-green transition-colors duration-300">Security</a>
+            <a href="#governance" class="hover:text-rh-green transition-colors duration-300">Governance</a>
+        </div>
+        <button onclick="connectAndMint()" class="border border-zinc-700 px-6 py-2 rounded-full font-bold text-xs hover:bg-zinc-800 hover:border-rh-green transition-all duration-300">CONNECT TERMINAL</button>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="overview" class="py-32 px-12 border-b border-zinc-900 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,200,5,0.1),transparent_60%)] pointer-events-none"></div>
+        <div class="fade-in max-w-5xl">
+            <div class="text-xs text-rh-green font-bold uppercase tracking-[0.3em] mb-4">Robinhood Chain Native Protocol</div>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 gradient-text">INSTITUTIONAL<br>RWA LIQUIDITY.</h1>
+            <p class="text-xl md:text-2xl text-zinc-400 max-w-3xl leading-relaxed">The foundational liquidity layer for tokenized assets. Fusing AI-driven risk mitigation with sub-second settlement on Robinhood Chain.</p>
+            <div class="mt-10 flex flex-wrap gap-4">
+                <button onclick="scrollToSection('markets')" class="rh-bg-green text-black px-8 py-3 rounded-xl font-bold hover:bg-green-400 transition-all duration-300">Explore Assets</button>
+                <button onclick="openWhitepaper()" class="border border-zinc-700 px-8 py-3 rounded-xl font-bold hover:border-rh-green hover:text-rh-green transition-all duration-300">View Whitepaper</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- STATS GRID -->
+    <section class="py-12 border-b border-zinc-900 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-zinc-900 text-center">
+        <div class="p-8 fade-in delay-1">
+            <div class="text-4xl font-bold rh-green stat-number" data-target="1800000000">$0</div>
+            <div class="text-xs text-zinc-500 uppercase mt-2">Total Value Locked</div>
+        </div>
+        <div class="p-8 fade-in delay-2">
+            <div class="text-4xl font-bold rh-green stat-number" data-target="14203">0</div>
+            <div class="text-xs text-zinc-500 uppercase mt-2">Active Positions</div>
+        </div>
+        <div class="p-8 fade-in delay-3">
+            <div class="text-4xl font-bold rh-green stat-number" data-target="5.8">0%</div>
+            <div class="text-xs text-zinc-500 uppercase mt-2">Avg. Portfolio Yield</div>
+        </div>
+        <div class="p-8 fade-in delay-4">
+            <div class="text-4xl font-bold rh-green stat-number" data-target="99.9">0%</div>
+            <div class="text-xs text-zinc-500 uppercase mt-2">Uptime Reliability</div>
+        </div>
+    </section>
+
+    <!-- AI & TECHNICAL SPECS -->
+    <section class="py-24 max-w-7xl mx-auto px-12 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="glass p-12 rounded-3xl fade-in delay-1">
+            <h2 class="text-3xl font-bold mb-6">Nexus AI Engine</h2>
+            <p class="text-zinc-400 text-sm mb-8">Our proprietary AI constantly monitors collateral ratios. If volatility spikes, the protocol autonomously executes a liquidity rebalance to protect against liquidation events.</p>
+            <div class="bg-black p-6 rounded-xl font-mono text-xs text-rh-green border border-zinc-800 space-y-2 h-40 overflow-hidden">
+                <div>> INITIALIZING NEURAL RISK MESH...</div>
+                <div>> ANALYZING T-BILL COLLATERAL HEALTH...</div>
+                <div>> CHECKING MARKET VOLATILITY...</div>
+                <div>> OPTIMIZING PORTFOLIO ALLOCATION...</div>
+                <div>> STATUS: OPTIMIZED | YIELD: 5.82%</div>
+                <div class="terminal-cursor">_</div>
+            </div>
+        </div>
+        <div class="glass p-12 rounded-3xl fade-in delay-2">
+            <h2 class="text-3xl font-bold mb-6">Technical Specs</h2>
+            <ul class="space-y-5 text-sm text-zinc-300">
+                <li class="flex items-start gap-3">
+                    <span class="rh-green mt-1">✓</span>
+                    <span><strong>ZK-Rollup Settlement:</strong> Sub-second finality, low gas fees, and maximum scalability.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="rh-green mt-1">✓</span>
+                    <span><strong>Multi-Sig Custody:</strong> Bankruptcy-remote structures with institutional-grade security.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="rh-green mt-1">✓</span>
+                    <span><strong>Cross-Chain Ready:</strong> Built on Robinhood Chain native rails with bridge support.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="rh-green mt-1">✓</span>
+                    <span><strong>Modular Design:</strong> Fully composable with major DeFi protocols and future-proof architecture.</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- NEW FEATURES SECTION -->
+    <section id="features" class="py-24 bg-zinc-900/10 border-y border-zinc-900">
+        <div class="max-w-7xl mx-auto px-12">
+            <h2 class="text-4xl font-bold mb-16 text-center gradient-text">Why Choose NexusAsset AI?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl text-center fade-in delay-1">
+                    <div class="text-4xl rh-green mb-4">⚡</div>
+                    <h3 class="text-xl font-bold mb-3">High Performance</h3>
+                    <p class="text-zinc-400 text-sm">Process thousands of transactions per second with near-zero latency.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-center fade-in delay-2">
+                    <div class="text-4xl rh-green mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold mb-3">Bank-Grade Security</h3>
+                    <p class="text-zinc-400 text-sm">Layered security protocols and regular third-party audits for your peace of mind.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-center fade-in delay-3">
+                    <div class="text-4xl rh-green mb-4">🤖</div>
+                    <h3 class="text-xl font-bold mb-3">AI Automation</h3>
+                    <p class="text-zinc-400 text-sm">Smart automation to manage risk, rebalance portfolios, and maximize yield.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARKETS SECTION -->
+    <section id="markets" class="py-24">
+        <div class="max-w-7xl mx-auto px-12">
+            <h2 class="text-4xl font-bold mb-16 text-center">Asset Marketplace</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass p-8 rounded-3xl fade-in delay-1">
+                    <h3 class="text-xl font-bold mb-2">Treasury Bills</h3>
+                    <p class="text-xs text-zinc-500 mb-6 uppercase">Fixed Income • Low Risk • Yield: 4.2–5.5%</p>
+                    <button onclick="connectAndMint('Treasury Bills')" class="w-full py-4 rounded-xl bg-zinc-800 font-bold hover:bg-rh-green hover:text-black transition-all duration-300">MINT ASSET</button>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass p-8 rounded-3xl fade-in delay-2">
+                    <h3 class="text-xl font-bold mb-2">Prime Real Estate</h3>
+                    <p class="text-xs text-zinc-500 mb-6 uppercase">Commercial • Fractionalized • Yield: 6.1–7.8%</p>
+                    <button onclick="connectAndMint('Prime Real Estate')" class="w-full py-4 rounded-xl bg-zinc-800 font-bold hover:bg-rh-green hover:text-black transition-all duration-300">MINT ASSET</button>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass p-8 rounded-3xl fade-in delay-3">
+                    <h3 class="text-xl font-bold mb-2">Corporate Debt</h3>
+                    <p class="text-xs text-zinc-500 mb-6 uppercase">Private Equity • High Yield • Yield: 7.5–9.2%</p>
+                    <button onclick="connectAndMint('Corporate Debt')" class="w-full py-4 rounded-xl bg-zinc-800 font-bold hover:bg-rh-green hover:text-black transition-all duration-300">MINT ASSET</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURITY & GOVERNANCE -->
+    <section id="security" class="py-24 max-w-7xl mx-auto px-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="glass p-12 rounded-3xl fade-in delay-1">
+                <h2 class="text-3xl font-bold mb-6">Security & Audits</h2>
+                <p class="text-zinc-400 text-sm mb-6">We prioritize security. Our contracts are audited by the leading firms, ensuring your assets are protected against zero-day exploits and vulnerabilities.</p>
+                <div class="flex flex-wrap gap-6 mt-4">
+                    <div class="bg-zinc-800 px-4 py-2 rounded-lg text-sm">✅ CERTIK AUDITED</div>
+                    <div class="bg-zinc-800 px-4 py-2 rounded-lg text-sm">✅ OPENZEPPELIN</div>
+                    <div class="bg-zinc-800 px-4 py-2 rounded-lg text-sm">✅ CHAINLINK ORACLE</div>
+                </div>
+            </div>
+            <div id="governance" class="glass p-12 rounded-3xl fade-in delay-2">
+                <h2 class="text-3xl font-bold mb-6">DAO Governance</h2>
+                <p class="text-zinc-400 text-sm mb-6">Participate in protocol decisions. Vote on collateral types, risk parameters, and treasury allocations. Your voice shapes the future of NexusAsset AI.</p>
+                <button class="bg-white text-black px-8 py-3 rounded-xl font-bold hover:bg-rh-green hover:text-black transition-all duration-300">ENTER DAO DASHBOARD</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-24 border-t border-zinc-900 px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 text-zinc-500 text-xs uppercase font-bold tracking-widest">
+            <div>
+                <div class="text-white text-xl mb-4 font-bold italic">NEXUS<span class="rh-green">ASSET.AI</span></div>
+                <p class="normal-case font-normal text-zinc-600">The infrastructure for global asset tokenization. Building the future of finance on-chain.</p>
+            </div>
+            <div>
+                <h5 class="text-white mb-4">Products</h5>
+                <ul class="space-y-2 normal-case font-normal">
+                    <li class="hover:text-rh-green transition-colors">Marketplace</li>
+                    <li class="hover:text-rh-green transition-colors">Bridge</li>
+                    <li class="hover:text-rh-green transition-colors">AI Agent</li>
+                    <li class="hover:text-rh-green transition-colors">Staking</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white mb-4">Resources</h5>
+                <ul class="space-y-2 normal-case font-normal">
+                    <li class="hover:text-rh-green transition-colors">Whitepaper</li>
+                    <li class="hover:text-rh-green transition-colors">Documentation</li>
+                    <li class="hover:text-rh-green transition-colors">Audit Reports</li>
+                    <li class="hover:text-rh-green transition-colors">Blog</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white mb-4">Legal</h5>
+                <ul class="space-y-2 normal-case font-normal">
+                    <li class="hover:text-rh-green transition-colors">Terms of Service</li>
+                    <li class="hover:text-rh-green transition-colors">Privacy Policy</li>
+                    <li class="hover:text-rh-green transition-colors">Risk Disclaimer</li>
+                    <li class="hover:text-rh-green transition-colors">Licensing</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-zinc-800 text-center text-zinc-600 text-sm">
+            © 2026 NexusAsset AI. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 20) {
+                nav.classList.add('bg-black/95', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-black/95', 'shadow-lg');
+            }
+        });
+
+        // Smooth scroll function
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Open whitepaper function
+        function openWhitepaper() {
+            alert("Membuka dokumen Whitepaper NexusAsset AI...");
+            // Bisa diganti dengan link sebenarnya: window.open('whitepaper.pdf', '_blank');
+        }
+
+        // Number counter animation
+        const counters = document.querySelectorAll('.stat-number');
+        const observerOptions = { threshold: 0.5 };
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseFloat(el.dataset.target);
+                    const duration = 2000;
+                    const stepTime = 20;
+                    const steps = duration / stepTime;
+                    const increment = target / steps;
+                    let current = 0;
+                    const format = el.textContent.includes('$') ? v => `$${v.toLocaleString()}` : v => `${v}${el.textContent.includes('%') ? '%' : ''}`;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.textContent = format(target);
+                            clearInterval(timer);
+                        } else {
+                            el.textContent = format(current);
+                        }
+                    }, stepTime);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, observerOptions);
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // Wallet connect & mint function
+        async function connectAndMint(assetName = null) {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    const signer = provider.getSigner();
+                    const address = await signer.getAddress();
+                    let message = `✅ Wallet terhubung: ${address.slice(0,6)}...${address.slice(-4)}`;
+                    if (assetName) {
+                        message += `\n🚀 Memulai proses pencetakan aset: ${assetName}`;
+                    } else {
+                        message += `\n🔗 Terhubung ke jaringan Robinhood Chain`;
+                    }
+                    alert(message);
+                } catch (e) {
+                    alert(`❌ Kesalahan transaksi: ${e.message}`);
+                }
+            } else {
+                alert("⚠️ Silakan pasang dompet Web3 seperti MetaMask terlebih dahulu!");
+            }
+        }
+    </script>
+</body>
+</html>
